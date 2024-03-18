@@ -1,8 +1,8 @@
 //@ts-check
 const hp = 'https://konomi.app';
 const cdn = 'https://kintone-plugin.konomi.app';
-const key = 'template';
-const localhost = 'https://127.0.0.1:65535';
+const key = 'redirect-after-save';
+const localhost = 'https://127.0.0.1:34801';
 
 /** @type { import('@konomi-app/kintone-utilities').PluginConfig } */
 export default {
@@ -14,14 +14,14 @@ export default {
       version: '1.0.0',
       type: 'APP',
       name: {
-        en: 'kintone-plugin-template',
-        ja: 'プラグインテンプレート',
-        zh: '插件模板',
+        en: 'Record Redirect After Save Plugin',
+        ja: 'レコード保存後ページ遷移プラグイン',
+        zh: '记录保存后重定向插件',
       },
       description: {
-        en: 'kintone-plugin-template',
-        ja: 'プラグインの説明をここに記載します',
-        zh: '插件模板',
+        en: 'A plugin that displays a dialog to redirect to a different page after saving a record, instead of the record detail page.',
+        ja: 'レコードの保存が完了した際に、レコード詳細画面ではなく別の画面へ遷移するダイアログを表示するプラグインです',
+        zh: '一个在保存记录后显示对话框以重定向到其他页面的插件，而不是记录详细页面。',
       },
       icon: 'icon.png',
       homepage_url: { ja: hp, en: hp },

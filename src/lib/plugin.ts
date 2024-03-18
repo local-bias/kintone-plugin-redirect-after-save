@@ -3,9 +3,11 @@ import { produce } from 'immer';
 import { PLUGIN_ID } from './global';
 
 export const getNewCondition = (): Plugin.Condition => ({
-  memo: '',
-  fields: [''],
-  isSampleUIShown: true,
+  trigger: ['create', 'edit'],
+  transitions: [{ href: '', label: '' }],
+  isDetailPageEnabled: false,
+  detailPageButtonLabel: '',
+  isDialogHidden: false,
 });
 
 /**

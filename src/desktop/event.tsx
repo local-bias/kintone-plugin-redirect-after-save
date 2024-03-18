@@ -13,8 +13,9 @@ import {
 } from '@/components/ui/dialog';
 import { PLUGIN_NAME } from '@/lib/static';
 import { t } from '@/lib/i18n';
+import config from 'plugin.config.mjs';
 
-const ROOT_ID = '🐸root';
+const ROOT_ID = `🐸${config.id}-root`;
 
 let cachedRoot: Root | null = null;
 

@@ -2,18 +2,30 @@ import { LANGUAGE } from './global';
 
 export const ui = {
   ja: {
-    'config.condition.memo.title': 'メモ',
-    'config.condition.memo.description':
-      'この設定はサンプルです。プラグインにテキスト情報を保存することができます。',
-    'config.condition.memo.label': '📝 メモ',
-    'config.condition.memo.placeholder': 'テキストを入力',
-    'config.condition.field.title': '対象フィールド',
-    'config.condition.field.description':
-      'この設定はサンプルです。このアプリの設定情報から、フィールド一覧を取得して表示しています。',
-    'config.condition.isSampleUIShown.title': 'スイッチのサンプル',
-    'config.condition.isSampleUIShown.description':
-      '有効・無効などを切り替えるスイッチのサンプルです。ここでは、レコード一覧にサンプルのUIを表示するかどうかを切り替えています。',
-    'config.condition.isSampleUIShown.label': 'サンプルUIを表示',
+    'config.condition.trigger.title': '発生タイミング',
+    'config.condition.trigger.description':
+      'このプラグインを有効にするタイミングを設定してください',
+    'config.condition.trigger.label': '発生タイミング',
+    'config.condition.transitions.title': '遷移先',
+    'config.condition.transitions.description':
+      'レコード保存時に、選択できる移動先を設定します。https://〇〇〇.cybozu.comの部分は不要です',
+    'config.condition.transitions.href.label': '移動先URL',
+    'config.condition.transitions.href.placeholder': '/k/',
+    'config.condition.transitions.label.label': 'ボタンに表示するラベル',
+    'config.condition.transitions.label.placeholder': 'ポータル画面へ',
+    'config.condition.isDetailPageEnabled.title': '標準の移動先(レコード詳細画面)の設定',
+    'config.condition.isDetailPageEnabled.description':
+      'この設定を有効にした場合、設定した遷移先に加えて、標準の移動先(レコード詳細画面)も選択できるようになります。',
+    'config.condition.isDetailPageEnabled.label': '標準の移動先を有効にする',
+    'config.condition.detailPageButtonLabel.title': '標準の移動先のラベル',
+    'config.condition.detailPageButtonLabel.description':
+      '標準の移動先(レコード詳細画面)のボタンに表示するラベルを設定します。',
+    'config.condition.detailPageButtonLabel.label': 'ボタンのラベル',
+    'config.condition.detailPageButtonLabel.placeholder': 'レコード詳細画面へ',
+    'config.condition.isDialogHidden.title': '選択ダイアログの非表示化',
+    'config.condition.isDialogHidden.description':
+      'この設定を有効にした場合、レコード保存時に移動する先を選択するダイアログを表示しません。必ず1つ目に設定したURLへ移動します。',
+    'config.condition.isDialogHidden.label': '選択ダイアログを表示しない',
 
     'config.sidebar.tab.label': '設定',
     'config.button.save': '設定を保存',
