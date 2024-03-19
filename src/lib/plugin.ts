@@ -1,13 +1,16 @@
-import { restoreStorage } from '@konomi-app/kintone-utilities';
+import { getAppId, restoreStorage } from '@konomi-app/kintone-utilities';
 import { produce } from 'immer';
-import { PLUGIN_ID } from './global';
+import { GUEST_SPACE_ID, PLUGIN_ID } from './global';
+import { t } from './i18n';
 
 export const getNewCondition = (): Plugin.Condition => ({
   trigger: ['create', 'edit'],
-  transitions: [{ href: '', label: '' }],
-  isDetailPageEnabled: false,
-  detailPageButtonLabel: '',
+  transitions: [
+    { type: 'custom', value: '/k/', label: t('config.condition.transitions.label.init') },
+  ],
   isDialogHidden: false,
+  dialogTitle: t('config.condition.dialogTitle.init'),
+  dialogDescription: t('config.condition.dialogDescription.init'),
 });
 
 /**
@@ -74,4 +77,29 @@ export const getConditionField = <T extends keyof Plugin.Condition>(
     return defaultValue;
   }
   return storage.conditions[conditionIndex][key] ?? defaultValue;
+};
+
+export const getTransitionUrl = (
+  transition: Plugin.Condition['transitions'][number]
+): string | null => {
+  const appId = getAppId()!;
+  const guestUrl = GUEST_SPACE_ID ? `guest/${GUEST_SPACE_ID}/` : '';
+
+  const baseUrl = `/k/${guestUrl}`;
+
+  switch (transition.type) {
+    case 'app':
+      return `${baseUrl}${transition.value}`;
+    case 'space':
+      return `${baseUrl}#/space/${transition.value}`;
+    case 'create':
+      return `${baseUrl}${appId}/edit`;
+    case 'portal':
+      return `${baseUrl}`;
+    case 'custom':
+      return transition.value;
+    case 'default':
+    default:
+      return null;
+  }
 };

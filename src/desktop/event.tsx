@@ -1,62 +1,54 @@
-import { restorePluginConfig } from '@/lib/plugin';
+import { getTransitionUrl, restorePluginConfig } from '@/lib/plugin';
 import { manager } from '@/lib/event-manager';
 import { Root, createRoot } from 'react-dom/client';
 import React from 'react';
-import { Rocket } from 'lucide-react';
-import { Alert, AlertTitle } from '@mui/material';
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from '@/components/ui/dialog';
-import { PLUGIN_NAME } from '@/lib/static';
-import { t } from '@/lib/i18n';
 import config from 'plugin.config.mjs';
+import { kintoneAPI } from '@konomi-app/kintone-utilities';
+import App from './app';
 
 const ROOT_ID = `🐸${config.id}-root`;
 
 let cachedRoot: Root | null = null;
 
-manager.add(['app.record.index.show'], async (event) => {
-  const config = restorePluginConfig();
+const { conditions } = restorePluginConfig();
 
-  if (!cachedRoot || !document.getElementById(ROOT_ID)) {
-    const rootElement = document.createElement('div');
-    rootElement.id = ROOT_ID;
-    document.body.append(rootElement);
+for (const condition of conditions) {
+  const events: kintoneAPI.js.EventType[] = [];
 
-    const root = createRoot(rootElement);
+  condition.trigger.includes('create') && events.push('app.record.create.submit.success');
+  condition.trigger.includes('edit') && events.push('app.record.edit.submit.success');
 
-    cachedRoot = root;
-  }
+  manager.add(events, async (event) => {
+    const { isDialogHidden } = condition;
 
-  cachedRoot.render(
-    <>
-      <Dialog>
-        <DialogTrigger>
-          <div className='fixed right-4 bottom-4'>
-            <Alert icon={<Rocket className='h-4 w-4' />} severity='success'>
-              <AlertTitle sx={{ fontWeight: 600 }}>{t('desktop.dialogtrigger.title')}</AlertTitle>
-              {t('desktop.dialogtrigger.content')}
-            </Alert>
-          </div>
-        </DialogTrigger>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>{PLUGIN_NAME}</DialogTitle>
-          </DialogHeader>
-          <div>
-            <h3>{t('desktop.dialog.title')}</h3>
-            <pre className='font-mono p-4 bg-foreground text-background'>
-              {JSON.stringify(config, null, 2)}
-            </pre>
-          </div>
-        </DialogContent>
-      </Dialog>
-    </>
-  );
+    if (isDialogHidden) {
+      const url = getTransitionUrl(condition.transitions[0]);
+      if (url) {
+        event.url = url;
+      }
+      return event;
+    }
 
-  return event;
-});
+    const result = await new Promise<string | null>((resolve, reject) => {
+      if (!cachedRoot || !document.getElementById(ROOT_ID)) {
+        const rootElement = document.createElement('div');
+        rootElement.id = ROOT_ID;
+        document.body.append(rootElement);
+
+        const root = createRoot(rootElement);
+
+        cachedRoot = root;
+      }
+
+      cachedRoot.render(
+        <App condition={condition} promiseResolver={resolve} promiseRejecter={reject} />
+      );
+    });
+
+    if (result) {
+      event.url = result;
+    }
+
+    return event;
+  });
+}

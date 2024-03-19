@@ -3,10 +3,11 @@ import React, { FC } from 'react';
 import { useRecoilCallback, useRecoilValue } from 'recoil';
 import { Checkbox, FormControlLabel } from '@mui/material';
 import { produce } from 'immer';
+import { t } from '@/lib/i18n';
 
 const CHECKBOXS = [
-  { key: 'create', label: 'レコード作成時' },
-  { key: 'edit', label: 'レコード編集時' },
+  { key: 'create', label: t('config.condition.trigger.label.create') },
+  { key: 'edit', label: t('config.condition.trigger.label.edit') },
 ] satisfies { key: Plugin.ConditionTrigger; label: string }[];
 
 const state = getConditionPropertyState('trigger');

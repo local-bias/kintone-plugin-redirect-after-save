@@ -7,6 +7,8 @@ declare namespace Plugin {
 
   type ConditionTrigger = Condition['trigger'][number];
 
+  type TransitionType = Condition['transitions'][number]['type'];
+
   /** 🔌 過去全てのバージョンを含むプラグインの設定情報 */
   type AnyConfig = ConfigV1; // | ConfigV2 | ...;
 
@@ -15,12 +17,13 @@ declare namespace Plugin {
     conditions: {
       trigger: ('create' | 'edit')[];
       transitions: {
-        href: string;
         label: string;
+        type: 'create' | 'portal' | 'app' | 'space' | 'custom' | 'default';
+        value: string;
       }[];
-      isDetailPageEnabled: boolean;
-      detailPageButtonLabel: string;
       isDialogHidden: boolean;
+      dialogTitle: string;
+      dialogDescription: string;
     }[];
   };
 }

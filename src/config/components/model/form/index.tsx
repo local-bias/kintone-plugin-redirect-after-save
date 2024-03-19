@@ -30,26 +30,6 @@ const Component: FC = () => (
       <TransitionsForm />
     </PluginFormSection>
     <PluginFormSection>
-      <PluginFormTitle>{t('config.condition.isDetailPageEnabled.title')}</PluginFormTitle>
-      <PluginFormDescription last>
-        {t('config.condition.isDetailPageEnabled.description')}
-      </PluginFormDescription>
-      <RecoilSwitch
-        state={getConditionPropertyState('isDetailPageEnabled')}
-        label={t('config.condition.isDetailPageEnabled.label')}
-      />
-    </PluginFormSection>
-    <PluginFormSection>
-      <PluginFormTitle>{t('config.condition.detailPageButtonLabel.title')}</PluginFormTitle>
-      <PluginFormDescription last>
-        {t('config.condition.detailPageButtonLabel.description')}
-      </PluginFormDescription>
-      <RecoilText
-        state={getConditionPropertyState('detailPageButtonLabel')}
-        label={t('config.condition.detailPageButtonLabel.label')}
-      />
-    </PluginFormSection>
-    <PluginFormSection>
       <PluginFormTitle>{t('config.condition.isDialogHidden.title')}</PluginFormTitle>
       <PluginFormDescription last>
         {t('config.condition.isDialogHidden.description')}
@@ -57,6 +37,28 @@ const Component: FC = () => (
       <RecoilSwitch
         state={getConditionPropertyState('isDialogHidden')}
         label={t('config.condition.isDialogHidden.label')}
+      />
+    </PluginFormSection>
+    <PluginFormSection>
+      <PluginFormTitle>{t('config.condition.dialogTitle.title')}</PluginFormTitle>
+      <PluginFormDescription last>
+        {t('config.condition.dialogTitle.description')}
+      </PluginFormDescription>
+      <RecoilText
+        state={getConditionPropertyState('dialogTitle')}
+        label={t('config.condition.dialogTitle.label')}
+      />
+    </PluginFormSection>
+    <PluginFormSection>
+      <PluginFormTitle>{t('config.condition.dialogDescription.title')}</PluginFormTitle>
+      <PluginFormDescription last>
+        {t('config.condition.dialogDescription.description')}
+      </PluginFormDescription>
+      <RecoilText
+        multiline
+        rows={4}
+        state={getConditionPropertyState('dialogDescription')}
+        label={t('config.condition.dialogDescription.label')}
       />
     </PluginFormSection>
     <DeleteButton />
