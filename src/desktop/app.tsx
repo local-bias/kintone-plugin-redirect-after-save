@@ -1,12 +1,6 @@
-import {
-  AlertDialog,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from '@/components/ui/alert-dialog';
+import { DialogHeader } from '@/components/ui/dialog';
 import { getTransitionUrl } from '@/lib/plugin';
-import { Button } from '@mui/material';
+import { Button, Dialog, DialogContent, DialogTitle } from '@mui/material';
 import React, { FC } from 'react';
 import { RecoilRoot } from 'recoil';
 
@@ -32,12 +26,12 @@ const Component: FC<Props> = (props) => {
   };
 
   return (
-    <AlertDialog open>
-      <AlertDialogContent>
-        <AlertDialogHeader>
-          <AlertDialogTitle>{condition.dialogTitle}</AlertDialogTitle>
-          <AlertDialogDescription>{condition.dialogDescription}</AlertDialogDescription>
-        </AlertDialogHeader>
+    <Dialog open>
+      <DialogHeader>
+        <DialogTitle>{condition.dialogTitle}</DialogTitle>
+      </DialogHeader>
+      <DialogContent className='🐸'>
+        <p className='mb-8'>{condition.dialogDescription}</p>
         <div className='flex flex-wrap gap-2'>
           {buttonProps.map(({ href, label }) => {
             return (
@@ -52,8 +46,8 @@ const Component: FC<Props> = (props) => {
             );
           })}
         </div>
-      </AlertDialogContent>
-    </AlertDialog>
+      </DialogContent>
+    </Dialog>
   );
 };
 
