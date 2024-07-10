@@ -11,6 +11,7 @@ type Props = {
 };
 
 const Component: FC<Props> = (props) => {
+  const [open, setOpen] = React.useState(true);
   const { condition, promiseResolver, promiseRejecter } = props;
   const { transitions } = condition;
 
@@ -23,10 +24,11 @@ const Component: FC<Props> = (props) => {
 
   const onButtonClick = (href: string | null) => {
     promiseResolver(href);
+    setOpen(false);
   };
 
   return (
-    <Dialog open>
+    <Dialog open={open}>
       <DialogHeader>
         <DialogTitle>{condition.dialogTitle}</DialogTitle>
       </DialogHeader>

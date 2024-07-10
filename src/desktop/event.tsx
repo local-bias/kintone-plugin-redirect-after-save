@@ -8,8 +8,6 @@ import App from './app';
 
 const ROOT_ID = `🐸${config.id}-root`;
 
-let cachedRoot: Root | null = null;
-
 const { conditions } = restorePluginConfig();
 
 for (const condition of conditions) {
@@ -30,19 +28,14 @@ for (const condition of conditions) {
     }
 
     const result = await new Promise<string | null>((resolve, reject) => {
-      if (!cachedRoot || !document.getElementById(ROOT_ID)) {
-        const rootElement = document.createElement('div');
+      let rootElement = document.getElementById(ROOT_ID);
+      if (!rootElement) {
+        rootElement = document.createElement('div');
         rootElement.id = ROOT_ID;
         document.body.append(rootElement);
-
-        const root = createRoot(rootElement);
-
-        cachedRoot = root;
       }
-
-      cachedRoot.render(
-        <App condition={condition} promiseResolver={resolve} promiseRejecter={reject} />
-      );
+      const root = createRoot(rootElement);
+      root.render(<App condition={condition} promiseResolver={resolve} promiseRejecter={reject} />);
     });
 
     if (result) {
