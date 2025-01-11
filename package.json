@@ -47,7 +47,7 @@
     "concurrently": "^8.2.2",
     "dotenv": "16.4.5",
     "tailwindcss": "^3.4.17",
-    "typescript": "^5.7.2"
+    "typescript": "^5.7.3"
   },
   "prettier": "@konomi-app/prettier-config"
 }
