@@ -1,9 +1,17 @@
+import {
+  AnyPluginConfig,
+  PluginCondition,
+  PluginConditionV1Schema,
+  PluginConfig,
+} from '@/schema/plugin-config';
 import { getAppId, restoreStorage } from '@konomi-app/kintone-utilities';
 import { produce } from 'immer';
+import { nanoid } from 'nanoid';
 import { GUEST_SPACE_ID, PLUGIN_ID } from './global';
 import { t } from './i18n';
 
-export const getNewCondition = (): Plugin.Condition => ({
+export const getNewCondition = (): PluginCondition => ({
+  id: nanoid(),
   trigger: ['create', 'edit'],
   transitions: [
     { type: 'custom', value: '/k/', label: t('config.condition.transitions.label.init') },
@@ -16,8 +24,8 @@ export const getNewCondition = (): Plugin.Condition => ({
 /**
  * プラグインの設定情報のひな形を返却します
  */
-export const createConfig = (): Plugin.Config => ({
-  version: 1,
+export const createConfig = (): PluginConfig => ({
+  version: 2,
   conditions: [getNewCondition()],
 });
 
@@ -28,34 +36,63 @@ export const createConfig = (): Plugin.Config => ({
  * @param anyConfig 保存されている設定情報
  * @returns 新しいバージョンの設定情報
  */
-export const migrateConfig = (anyConfig: Plugin.AnyConfig): Plugin.Config => {
+export const migrateConfig = (anyConfig: AnyPluginConfig): PluginConfig => {
   const { version } = anyConfig;
   switch (version) {
-    case undefined:
-      //@ts-expect-error
-      return migrateConfig({ version: 1, ...anyConfig });
-    case 1:
-    default:
-      // もし新しいバージョンを追加したらここに追加する
-      // return migrateConfig({ version: 2, ...anyConfig });
+    case undefined: {
+      const config = anyConfig as unknown as any;
+      if (
+        typeof config !== 'object' ||
+        (!('conditions' in config) && !Array.isArray(config.conditions))
+      ) {
+        return migrateConfig(createConfig());
+      }
+
+      // condition単位でバリデーションを行い、エラーがあれば新しいバージョンに変換する
+      const newCondition = config.conditions.map((condition: unknown) => {
+        const parsed = PluginConditionV1Schema.safeParse(condition);
+        if (parsed.success) {
+          return parsed.data;
+        }
+        return getNewCondition();
+      });
+
+      return migrateConfig({
+        version: 1,
+        conditions: newCondition,
+      });
+    }
+    case 1: {
+      return migrateConfig({
+        ...anyConfig,
+        version: 2,
+        conditions: anyConfig.conditions.map((condition) => ({
+          id: nanoid(),
+          ...condition,
+        })),
+      });
+    }
+    case 2:
+    default: {
       return anyConfig;
+    }
   }
 };
 
 /**
  * プラグインの設定情報を復元します
  */
-export const restorePluginConfig = (): Plugin.Config => {
-  const config = restoreStorage<Plugin.AnyConfig>(PLUGIN_ID) ?? createConfig();
+export const restorePluginConfig = (): PluginConfig => {
+  const config = restoreStorage<AnyPluginConfig>(PLUGIN_ID) ?? createConfig();
   return migrateConfig(config);
 };
 
-export const getUpdatedStorage = <T extends keyof Plugin.Condition>(
-  storage: Plugin.Config,
+export const getUpdatedStorage = <T extends keyof PluginCondition>(
+  storage: PluginConfig,
   props: {
     conditionIndex: number;
     key: T;
-    value: Plugin.Condition[T];
+    value: PluginCondition[T];
   }
 ) => {
   const { conditionIndex, key, value } = props;
@@ -64,14 +101,14 @@ export const getUpdatedStorage = <T extends keyof Plugin.Condition>(
   });
 };
 
-export const getConditionField = <T extends keyof Plugin.Condition>(
-  storage: Plugin.Config,
+export const getConditionField = <T extends keyof PluginCondition>(
+  storage: PluginConfig,
   props: {
     conditionIndex: number;
     key: T;
-    defaultValue: NonNullable<Plugin.Condition[T]>;
+    defaultValue: NonNullable<PluginCondition[T]>;
   }
-): NonNullable<Plugin.Condition[T]> => {
+): NonNullable<PluginCondition[T]> => {
   const { conditionIndex, key, defaultValue } = props;
   if (!storage.conditions[conditionIndex]) {
     return defaultValue;
@@ -80,7 +117,7 @@ export const getConditionField = <T extends keyof Plugin.Condition>(
 };
 
 export const getTransitionUrl = (
-  transition: Plugin.Condition['transitions'][number]
+  transition: PluginCondition['transitions'][number]
 ): string | null => {
   const appId = getAppId()!;
   const guestUrl = GUEST_SPACE_ID ? `guest/${GUEST_SPACE_ID}/` : '';
