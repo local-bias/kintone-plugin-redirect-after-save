@@ -1,11 +1,12 @@
 import { DialogHeader } from '@/components/ui/dialog';
 import { getTransitionUrl } from '@/lib/plugin';
+import { PluginCondition } from '@/schema/plugin-config';
 import { Button, Dialog, DialogContent, DialogTitle } from '@mui/material';
 import React, { FC } from 'react';
 import { RecoilRoot } from 'recoil';
 
 type Props = {
-  condition: Plugin.Condition;
+  condition: PluginCondition;
   promiseResolver: (value: string | null) => void;
   promiseRejecter: (reason: any) => void;
 };
