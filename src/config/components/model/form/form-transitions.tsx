@@ -1,12 +1,13 @@
 import { getConditionPropertyState } from '@/config/states/plugin';
-import React, { FC } from 'react';
+import { t } from '@/lib/i18n';
+import { PluginCondition, TransitionType } from '@/schema/plugin-config';
 import { useRecoilRow } from '@konomi-app/kintone-utilities-react';
-import { useRecoilCallback, useRecoilValue } from 'recoil';
-import { IconButton, MenuItem, TextField, Tooltip } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
-import { t } from '@/lib/i18n';
+import { IconButton, MenuItem, TextField, Tooltip } from '@mui/material';
 import { produce } from 'immer';
+import React, { FC } from 'react';
+import { useRecoilCallback, useRecoilValue } from 'recoil';
 
 const state = getConditionPropertyState('transitions');
 
@@ -15,19 +16,19 @@ const TRANSITION_TYPES = [
   { key: 'create', label: t('condition.transitions.type.option.label.create') },
   { key: 'portal', label: t('condition.transitions.type.option.label.portal') },
   { key: 'default', label: t('condition.transitions.type.option.label.default') },
-] satisfies { key: Plugin.TransitionType; label: string }[];
+] satisfies { key: TransitionType; label: string }[];
 
 const Component: FC = () => {
   const values = useRecoilValue(state);
   const { addRow, deleteRow } = useRecoilRow({
     state,
     getNewRow: () =>
-      ({ type: 'custom', value: '', label: '' }) as Plugin.Condition['transitions'][number],
+      ({ type: 'custom', value: '', label: '' }) as PluginCondition['transitions'][number],
   });
 
   const onTypeChange = useRecoilCallback(
     ({ set }) =>
-      (value: Plugin.TransitionType, index: number) => {
+      (value: TransitionType, index: number) => {
         set(state, (prev) =>
           produce(prev, (draft) => {
             draft[index].type = value;
@@ -75,7 +76,7 @@ const Component: FC = () => {
             <TextField
               select
               value={value.type}
-              onChange={(e) => onTypeChange(e.target.value as Plugin.TransitionType, i)}
+              onChange={(e) => onTypeChange(e.target.value as TransitionType, i)}
               label={t('config.condition.transitions.type.label')}
             >
               {TRANSITION_TYPES.map((type) => (
