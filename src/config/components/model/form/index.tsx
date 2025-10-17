@@ -45,6 +45,7 @@ const Component: FC = () => (
         {t('config.condition.dialogTitle.description')}
       </PluginFormDescription>
       <RecoilText
+        className='w-full'
         state={getConditionPropertyState('dialogTitle')}
         label={t('config.condition.dialogTitle.label')}
       />
@@ -57,6 +58,7 @@ const Component: FC = () => (
       <RecoilText
         multiline
         rows={4}
+        className='w-full'
         state={getConditionPropertyState('dialogDescription')}
         label={t('config.condition.dialogDescription.label')}
       />
