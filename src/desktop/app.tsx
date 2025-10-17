@@ -34,8 +34,8 @@ const Component: FC<Props> = (props) => {
         <DialogTitle>{condition.dialogTitle}</DialogTitle>
       </DialogHeader>
       <DialogContent className='🐸'>
-        <p className='mb-8'>{condition.dialogDescription}</p>
-        <div className='flex flex-wrap gap-2'>
+        <p className='rad:mb-8'>{condition.dialogDescription}</p>
+        <div className='rad:flex rad:flex-wrap rad:gap-2'>
           {buttonProps.map(({ href, label }) => {
             return (
               <Button
